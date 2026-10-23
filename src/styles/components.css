@@ -1,0 +1,933 @@
+/** اجزای مشترک: کارت، دکمه، ورودی، تراشه، اسکلت، توست، کشو. */
+
+/* ---------- کارت شیشه‌ای ---------- */
+/*
+ * دو لایهٔ پس‌زمینه: شیب نور (--sheen) روی سطح نیمه‌شفاف. لایهٔ اول باعث
+ * می‌شود لبهٔ بالای کارت روشن‌تر از پایینش باشد — همان چیزی که یک مستطیل
+ * نیمه‌شفاف را شبیه شیشهٔ واقعی می‌کند و نه یک ماسک خاکستری.
+ */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border-radius: var(--r-xl);
+  background: var(--sheen), var(--surface-1);
+  border: 1px solid var(--surface-edge-soft);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(var(--blur-card)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--blur-card)) saturate(160%);
+  overflow: hidden;
+  transition:
+    border-color var(--t-base) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out);
+}
+
+/*
+ * زیر ماوس فقط لبه روشن‌تر می‌شود و سایه کمی عمیق‌تر. کارت جابه‌جا نمی‌شود:
+ * ستون کناری اسکرول‌شونده است و بالا پریدن کارت‌ها آنجا حالت تکان می‌دهد.
+ */
+.card:hover {
+  border-color: var(--surface-edge);
+  box-shadow: var(--shadow-lift);
+}
+
+:root[data-glass='off'] .card {
+  background: var(--surface-solid);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  min-width: 0;
+  min-height: 0;
+}
+
+/* کارتی که محتوایش خودش را معرفی می‌کند و به سربرگ نیاز ندارد */
+.card--plain {
+  gap: var(--s-2);
+}
+
+/* کارت کشسان: سهم خالی ستون را می‌گیرد و سرریزش را خودش اسکرول می‌کند */
+.card--grow {
+  flex: 1;
+  min-height: 0;
+}
+
+.card--grow > .card__body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-inline-end: calc(var(--s-2) * -1);
+  padding-inline-end: var(--s-2);
+}
+
+.card--bare {
+  padding: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  transition: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  flex: 1;
+  min-height: 0;
+}
+
+.card--bare:hover {
+  border: 0;
+  box-shadow: none;
+}
+
+.card--bare > .card__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 1.75rem;
+}
+
+.card__title {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: var(--track-caption);
+  color: var(--text-muted);
+}
+
+/*
+ * آیکون سربرگ داخل یک هالهٔ رنگی می‌نشیند. با box-shadow ساخته شده نه با
+ * padding: یک <svg> با اندازهٔ ثابت اگر padding بگیرد بزرگ می‌شود و
+ * خط سربرگ را جابه‌جا می‌کند.
+ */
+.card__title .icon {
+  color: var(--accent);
+  border-radius: 6px;
+  background: var(--accent-quiet);
+  box-shadow: 0 0 0 5px var(--accent-quiet);
+  margin-inline-end: 4px;
+}
+
+.card__actions {
+  margin-inline-start: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--s-1);
+  /* ابزارها تا وقتی لازم نشده‌اند سر و صدا نمی‌کنند */
+  opacity: 0;
+  transition: opacity var(--t-fast) linear;
+}
+
+.card:hover .card__actions,
+.card__actions:focus-within {
+  opacity: 1;
+}
+
+/* ---------- دکمه‌ها ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: 2.3rem;
+  padding: 0 var(--s-4);
+  border-radius: var(--r-full);
+  background: var(--surface-2);
+  border: 1px solid var(--surface-edge-soft);
+  color: var(--text);
+  font-weight: 500;
+  transition:
+    transform var(--t-fast) var(--ease-out),
+    background var(--t-fast) linear,
+    border-color var(--t-fast) linear;
+}
+
+.btn:hover {
+  background: color-mix(in oklab, var(--surface-2) 70%, var(--accent) 12%);
+  border-color: var(--surface-edge);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn--primary {
+  background: var(--accent-grad);
+  border-color: transparent;
+  color: var(--text-on-accent);
+  font-weight: 600;
+  box-shadow: var(--accent-halo);
+}
+
+.btn--primary:hover {
+  filter: brightness(1.08);
+  box-shadow: var(--accent-halo), 0 0 0 3px var(--accent-quiet);
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: transparent;
+}
+
+.btn--ghost:hover {
+  background: var(--surface-2);
+}
+
+.btn--danger:hover {
+  background: color-mix(in oklab, var(--down) 24%, transparent);
+  border-color: color-mix(in oklab, var(--down) 45%, transparent);
+  color: var(--down);
+}
+
+/* دکمهٔ آیکونی — هدف لمسی حداقل ۴۴px با ناحیهٔ نامرئی اطراف */
+.icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.95rem;
+  height: 1.95rem;
+  border-radius: var(--r-full);
+  color: var(--text-faint);
+  transition:
+    background var(--t-fast) linear,
+    color var(--t-fast) linear,
+    transform var(--t-fast) var(--ease-out);
+}
+
+.icon-btn::after {
+  content: '';
+  position: absolute;
+  inset: -0.35rem;
+}
+
+.icon-btn:hover {
+  background: var(--surface-2);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.icon-btn:active {
+  transform: scale(0.92);
+}
+
+.icon-btn[aria-pressed='true'] {
+  color: var(--accent-strong);
+  background: var(--accent-quiet);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent) 35%, transparent) inset;
+}
+
+/* ---------- ورودی‌ها ---------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.field__label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: var(--track-caption);
+}
+
+.field__hint {
+  font-size: 0.76rem;
+  color: var(--text-faint);
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  min-height: 2.4rem;
+  padding: 0.45rem var(--s-3);
+  border-radius: var(--r-md);
+  background: color-mix(in oklab, var(--surface-2) 80%, transparent);
+  border: 1px solid var(--surface-edge-soft);
+  color: var(--text);
+  transition: border-color var(--t-fast) linear, background var(--t-fast) linear;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--text-faint);
+}
+
+.input:hover,
+.select:hover,
+.textarea:hover {
+  border-color: var(--surface-edge);
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-quiet);
+}
+
+.textarea {
+  min-height: 7rem;
+  resize: vertical;
+  line-height: 1.8;
+}
+
+.select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: left 1rem top 55%, left 0.7rem top 55%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-inline-start: 2rem;
+}
+
+.select option {
+  background: var(--surface-solid);
+  color: var(--text);
+}
+
+/* کلید روشن/خاموش */
+.switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  cursor: pointer;
+  min-height: 2.75rem;
+}
+
+.switch input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+
+.switch__track {
+  flex: none;
+  width: 2.75rem;
+  height: 1.6rem;
+  border-radius: var(--r-full);
+  background: color-mix(in oklab, var(--text-faint) 35%, transparent);
+  border: 1px solid var(--surface-edge-soft);
+  transition: background var(--t-base) var(--ease-out);
+}
+
+.switch__thumb {
+  display: block;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin: 0.15rem;
+  border-radius: var(--r-full);
+  background: #fff;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 35%);
+  transition: transform var(--t-base) var(--ease-out);
+}
+
+.switch input:checked + .switch__track {
+  background: var(--accent-grad);
+  border-color: transparent;
+  box-shadow: var(--accent-halo);
+}
+
+/* راست‌چین: انگشتک به چپ حرکت می‌کند */
+.switch input:checked + .switch__track .switch__thumb {
+  transform: translateX(-1.15rem);
+}
+
+.switch input:focus-visible + .switch__track {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.switch__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.switch__text small {
+  color: var(--text-faint);
+  font-size: 0.76rem;
+}
+
+/* ---------- تراشه ---------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  min-height: 2rem;
+  padding: 0 0.7rem;
+  border-radius: var(--r-full);
+  background: var(--surface-2);
+  border: 1px solid var(--surface-edge-soft);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  transition: all var(--t-fast) linear;
+}
+
+.chip:hover {
+  border-color: var(--surface-edge);
+  color: var(--text);
+}
+
+.chip[aria-pressed='true'],
+.chip--active {
+  background: var(--accent-quiet);
+  border-color: color-mix(in oklab, var(--accent) 45%, transparent);
+  color: var(--text);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 10%, transparent);
+}
+
+/* ---------- حالت‌های خالی، خطا و بارگذاری ---------- */
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-4) var(--s-3);
+  text-align: center;
+  color: var(--text-faint);
+  font-size: 0.85rem;
+}
+
+.state__title {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.skeleton {
+  border-radius: var(--r-sm);
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--text-faint) 12%, transparent) 25%,
+    color-mix(in oklab, var(--text-faint) 22%, transparent) 37%,
+    color-mix(in oklab, var(--text-faint) 12%, transparent) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: -135% 0;
+  }
+}
+
+.stale-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  font-size: 0.72rem;
+  color: var(--warn);
+}
+
+/* ---------- توست ---------- */
+.toast-layer {
+  position: fixed;
+  inset-block-end: var(--s-5);
+  inset-inline-start: 50%;
+  transform: translateX(50%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  z-index: 60;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: 0.6rem var(--s-3) 0.6rem var(--s-2);
+  border-radius: var(--r-full);
+  background: var(--sheen), color-mix(in oklab, var(--surface-solid) 88%, transparent);
+  border: 1px solid var(--surface-edge);
+  box-shadow: var(--shadow-float);
+  backdrop-filter: blur(var(--blur-chrome));
+  -webkit-backdrop-filter: blur(var(--blur-chrome));
+  font-size: 0.86rem;
+  pointer-events: auto;
+  animation: toast-in var(--t-base) var(--ease-out);
+}
+
+.toast--leaving {
+  animation: toast-out var(--t-fast) var(--ease-in) forwards;
+}
+
+.toast__action {
+  padding: 0 0.7rem;
+  min-height: 2rem;
+  border-radius: var(--r-full);
+  background: var(--accent-quiet);
+  color: var(--accent-strong);
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+}
+
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+}
+
+/* ---------- کشوی تنظیمات ---------- */
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--scrim);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 40;
+  animation: fade-in var(--t-base) var(--ease-out);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.drawer {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: min(28rem, 100vw);
+  display: flex;
+  flex-direction: column;
+  background: var(--sheen), color-mix(in oklab, var(--surface-solid) 92%, transparent);
+  border-inline-end: 1px solid var(--surface-edge);
+  box-shadow: var(--shadow-float);
+  backdrop-filter: blur(var(--blur-chrome)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--blur-chrome)) saturate(160%);
+  z-index: 50;
+  animation: drawer-in var(--t-slow) var(--ease-out);
+}
+
+/* ورود و خروج از یک مسیر: کشو از همان لبه‌ای می‌رود که آمده */
+@keyframes drawer-in {
+  from {
+    transform: translateX(-100%);
+    opacity: 0.4;
+  }
+}
+
+.drawer__head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border-block-end: 1px solid var(--surface-edge-soft);
+}
+
+.drawer__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: var(--track-title);
+}
+
+/* خط باریک رنگی زیر سربرگ کشو — مرز را از یک خط خاکستری خشک درمی‌آورد */
+.drawer__head {
+  position: relative;
+}
+
+.drawer__head::after {
+  content: '';
+  position: absolute;
+  inset-block-end: -1px;
+  inset-inline: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--accent) 55%, transparent), transparent);
+}
+
+.drawer__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+.drawer__foot {
+  padding: var(--s-3) var(--s-4);
+  border-block-start: 1px solid var(--surface-edge-soft);
+  display: flex;
+  gap: var(--s-2);
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.settings-group__title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-faint);
+  letter-spacing: var(--track-caption);
+  text-transform: none;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  justify-content: space-between;
+}
+
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.swatch {
+  width: 3.6rem;
+  height: 2.4rem;
+  border-radius: var(--r-md);
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 1px var(--surface-edge-soft);
+  transition:
+    transform var(--t-base) var(--ease-spring),
+    box-shadow var(--t-fast) linear;
+}
+
+.swatch:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 0 0 1px var(--surface-edge), 0 10px 20px -12px rgb(0 0 0 / 90%);
+}
+
+.swatch[aria-pressed='true'] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--surface-edge-soft), var(--accent-halo);
+}
+
+.accent-dot {
+  position: relative;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--r-full);
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 1px var(--surface-edge);
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+.accent-dot:hover {
+  transform: scale(1.12);
+}
+
+.accent-dot::after {
+  content: '';
+  position: absolute;
+  inset: -0.5rem;
+}
+
+.accent-dot[aria-pressed='true'] {
+  border-color: var(--text);
+}
+
+
+/* ---------- قاب زبانه‌دار ---------- */
+.tabs {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border-radius: var(--r-xl);
+  background: var(--sheen), var(--surface-1);
+  border: 1px solid var(--surface-edge-soft);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(var(--blur-card)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--blur-card)) saturate(160%);
+  transition: border-color var(--t-base) var(--ease-out), box-shadow var(--t-base) var(--ease-out);
+}
+
+.tabs:hover {
+  border-color: var(--surface-edge);
+  box-shadow: var(--shadow-lift);
+}
+
+:root[data-glass='off'] .tabs {
+  background: var(--surface-solid);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.tabs__bar {
+  position: relative;
+  flex: none;
+  padding: 0.2rem;
+  border-radius: var(--r-full);
+  background: color-mix(in oklab, var(--surface-2) 55%, transparent);
+  border: 1px solid var(--surface-edge-soft);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 25%) inset;
+}
+
+.tabs__list {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.15rem;
+}
+
+.tabs__tab {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-width: 0;
+  min-height: 2.1rem;
+  padding: 0 0.6rem;
+  border-radius: var(--r-full);
+  color: var(--text-faint);
+  font-size: 0.82rem;
+  white-space: nowrap;
+  transition: color var(--t-fast) linear;
+}
+
+/*
+ * کنترل بخش‌بخش: فقط زبانهٔ فعال نامش را نشان می‌دهد.
+ * پنج برچسب کنار هم در یک ستون باریک جا نمی‌شوند و آیکون‌ها به‌تنهایی
+ * برای تشخیص کافی‌اند — نام کامل روی hover و برای صفحه‌خوان باقی است.
+ */
+.tabs__tab span {
+  display: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tabs__tab[aria-selected='true'] {
+  flex: 1;
+}
+
+.tabs__tab[aria-selected='true'] span {
+  display: block;
+}
+
+.tabs__tab:hover {
+  color: var(--text-muted);
+}
+
+.tabs__tab[aria-selected='true'] {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.tabs__tab[aria-selected='true'] .icon {
+  color: var(--accent);
+}
+
+/*
+ * قرص متحرک پشت زبانهٔ فعال؛ جایش با فنر تنظیم می‌شود.
+ * لنگر روی inline-start است — در راست‌چین یعنی لبهٔ راست، همان‌جایی که
+ * زبانهٔ اول می‌نشیند — و translateX منفی آن را به سمت زبانه‌های بعدی می‌برد.
+ */
+.tabs__indicator {
+  position: absolute;
+  inset-block: 0.2rem;
+  inset-inline-start: 0.2rem;
+  border-radius: var(--r-full);
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--accent) 14%, transparent), transparent 70%),
+    var(--surface-solid);
+  box-shadow:
+    0 1px 0 0 var(--surface-edge) inset,
+    0 0 0 1px color-mix(in oklab, var(--accent) 18%, transparent),
+    0 6px 16px -10px rgb(0 0 0 / 90%);
+  pointer-events: none;
+}
+
+.tabs__panels {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.tabs__panel {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.tabs__panel[hidden] {
+  display: none;
+}
+
+@media (max-width: 620px) {
+  .tabs__tab span {
+    display: none;
+  }
+}
+
+
+/* ---------- دیالوگ ورودی ---------- */
+.prompt {
+  position: fixed;
+  inset-inline-start: 50%;
+  inset-block-start: 50%;
+  transform: translate(50%, -50%);
+  width: min(24rem, calc(100vw - 2rem));
+  z-index: 70;
+  transform-origin: center;
+  animation: prompt-in var(--t-base) var(--ease-out);
+}
+
+@keyframes prompt-in {
+  from {
+    opacity: 0;
+    transform: translate(50%, -46%) scale(0.97);
+  }
+}
+
+.prompt__title {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: var(--track-title);
+}
+
+.prompt__title .icon {
+  color: var(--accent);
+}
+
+.prompt__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.prompt__actions {
+  display: flex;
+  gap: var(--s-2);
+}
+
+.prompt__form .field__hint:empty {
+  display: none;
+}
+
+/* ---------- تصویرکِ حالت‌ها ---------- */
+/*
+ * لکه و آیکون روی هم می‌نشینند (هر دو در خانهٔ ۱×۱ همان گرید)، پس نیازی
+ * به موقعیت مطلق و هماهنگ نگه داشتن دستیِ اندازه‌ها نیست.
+ */
+.spot {
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  margin-block-end: var(--s-1);
+}
+
+.spot > * {
+  grid-area: 1 / 1;
+}
+
+.spot__art {
+  width: 100%;
+  height: 100%;
+}
+
+.spot-stop-1 {
+  stop-color: color-mix(in oklab, var(--accent) 34%, transparent);
+}
+
+.spot-stop-2 {
+  stop-color: color-mix(in oklab, var(--accent-2) 12%, transparent);
+}
+
+.spot__blob {
+  /* آرام نفس می‌کشد تا ناحیهٔ خالی مرده به نظر نرسد */
+  transform-origin: center;
+  animation: spot-breathe 7s ease-in-out infinite alternate;
+}
+
+.spot__arc {
+  stroke: color-mix(in oklab, var(--accent) 40%, transparent);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 3 6;
+}
+
+.spot__dot {
+  fill: color-mix(in oklab, var(--accent) 55%, transparent);
+}
+
+.spot__dot--sm {
+  fill: color-mix(in oklab, var(--accent-2) 45%, transparent);
+}
+
+.spot__icon {
+  color: var(--accent-strong);
+  /* آیکون باید از لکه جدا دیده شود، نه اینکه در آن حل شود */
+  filter: drop-shadow(0 1px 3px rgb(0 0 0 / 35%));
+}
+
+/* حالت خطا همان تصویرک است با پالت هشدار */
+.spot--warn .spot-stop-1 {
+  stop-color: color-mix(in oklab, var(--warn) 32%, transparent);
+}
+
+.spot--warn .spot-stop-2 {
+  stop-color: color-mix(in oklab, var(--down) 12%, transparent);
+}
+
+.spot--warn .spot__arc {
+  stroke: color-mix(in oklab, var(--warn) 40%, transparent);
+}
+
+.spot--warn .spot__dot {
+  fill: color-mix(in oklab, var(--warn) 55%, transparent);
+}
+
+.spot--warn .spot__dot--sm {
+  fill: color-mix(in oklab, var(--down) 45%, transparent);
+}
+
+.spot--warn .spot__icon {
+  color: var(--warn);
+}
+
+@keyframes spot-breathe {
+  to {
+    transform: scale(1.06) rotate(-4deg);
+  }
+}
+
+:root[data-motion='reduced'] .spot__blob {
+  animation: none;
+}

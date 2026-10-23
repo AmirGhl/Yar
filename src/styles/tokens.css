@@ -1,0 +1,214 @@
+/**
+ * توکن‌های طراحی.
+ *
+ * جهت کلی: آرام اما زنده. سطح‌ها نازک‌اند و پس‌زمینه از میانشان دیده می‌شود،
+ * ولی هر سطح یک «شیب نور» دارد تا مثل شیشهٔ واقعی لبهٔ بالایش روشن‌تر باشد.
+ * رنگ فقط جایی می‌آید که معنا دارد: تأکید، جهت تغییر، تعطیلی.
+ * پالت کامل روی :root تعریف می‌شود؛ تم‌ها فقط همان توکن‌ها را بازتعریف می‌کنند.
+ */
+
+:root {
+  color-scheme: dark;
+
+  --accent: #38bdf8;
+  --accent-strong: color-mix(in oklab, var(--accent) 78%, white 22%);
+  --accent-quiet: color-mix(in oklab, var(--accent) 18%, transparent);
+  /*
+   * رنگ همراه: هر رنگ تأکیدی که کاربر انتخاب کند، این یکی کمی به بنفش
+   * می‌چرخد. شیب دو رنگی همیشه هماهنگ می‌ماند و هیچ رنگی دستی ثابت نشده.
+   */
+  --accent-2: color-mix(in oklab, var(--accent) 55%, #a855f7 45%);
+  --accent-grad: linear-gradient(135deg, var(--accent-strong), var(--accent-2));
+  --accent-halo: 0 10px 30px -12px color-mix(in oklab, var(--accent) 65%, transparent);
+
+  /* سطح‌ها — عمق با روشنایی ساخته می‌شود، نه با خط */
+  --bg: #05070e;
+  --surface-1: rgb(255 255 255 / 6%);
+  --surface-2: rgb(255 255 255 / 11%);
+  --surface-solid: #101622;
+  --surface-edge: rgb(255 255 255 / 14%);
+  --surface-edge-soft: rgb(255 255 255 / 7%);
+  --scrim: rgb(3 6 12 / 58%);
+
+  /*
+   * شیب نور روی سطح‌ها: لبهٔ بالا روشن‌تر، پایین تیره‌تر. همان چیزی که
+   * شیشه را از یک مستطیل نیمه‌شفاف جدا می‌کند.
+   */
+  --sheen: linear-gradient(
+    170deg,
+    rgb(255 255 255 / 8%) 0%,
+    rgb(255 255 255 / 2.5%) 34%,
+    rgb(255 255 255 / 0%) 62%,
+    rgb(0 0 0 / 6%) 100%
+  );
+
+  /* متن — کنتراست روی شیشه بررسی شده (AA) */
+  --text: #f4f7fc;
+  --text-muted: #bcc6d8;
+  --text-faint: #8d99ae;
+  --text-on-accent: #05121c;
+
+  /* معنایی */
+  --up: #34d399;
+  --down: #fb7185;
+  --warn: #fbbf24;
+  --holiday: #f87171;
+
+  /*
+   * رنگ‌های آب‌وهوا عمداً از --accent مستقل‌اند: خورشید باید کهربایی باشد
+   * حتی وقتی کاربر رنگ تأکیدی را سبز کرده. اینها توصیف واقعیت‌اند، نه تزئین.
+   */
+  --wx-sun-1: #ffe08a;
+  --wx-sun-2: #f59e0b;
+  --wx-moon-1: #e8eeff;
+  --wx-moon-2: #9fb2d8;
+  --wx-cloud-1: #f4f8ff;
+  --wx-cloud-2: #b9c6dd;
+  --wx-storm-1: #8f9bb3;
+  --wx-storm-2: #5b6577;
+  --wx-rain: #7dd3fc;
+  --wx-snow: #e8f4ff;
+  --wx-bolt: #fbbf24;
+
+  /* شعاع — نرم‌تر و یکدست‌تر از قبل */
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 26px;
+  --r-full: 999px;
+
+  /* فاصله */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+
+  /*
+   * سایه — سه لایه: خط نور داخلی روی لبهٔ بالا، سایهٔ نزدیک برای جداکردن،
+   * سایهٔ دور برای شناور نشان دادن. یک سایهٔ تکی همیشه تخت به نظر می‌رسد.
+   */
+  --shadow-card:
+    0 1px 0 0 rgb(255 255 255 / 9%) inset,
+    0 2px 6px -4px rgb(0 0 0 / 70%),
+    0 22px 48px -30px rgb(0 0 0 / 95%);
+  --shadow-float:
+    0 1px 0 0 var(--surface-edge) inset,
+    0 4px 12px -6px rgb(0 0 0 / 70%),
+    0 36px 80px -32px rgb(0 0 0 / 95%);
+  --shadow-lift:
+    0 1px 0 0 rgb(255 255 255 / 12%) inset,
+    0 4px 10px -6px rgb(0 0 0 / 70%),
+    0 30px 60px -28px rgb(0 0 0 / 95%);
+
+  /* شیشه */
+  --blur-card: 26px;
+  --blur-chrome: 34px;
+
+  /* تایپوگرافی — تراکینگ وابسته به اندازه است، نه یک مقدار ثابت */
+  --font: 'Vazirmatn', 'Segoe UI', 'Tahoma', system-ui, sans-serif;
+  --track-display: -0.03em;
+  --track-title: -0.012em;
+  --track-body: 0;
+  --track-caption: 0.01em;
+
+  /* حرکت */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  /* پرش ملایم برای چیزهایی که کاربر مستقیم لمسشان می‌کند */
+  --ease-spring: cubic-bezier(0.34, 1.42, 0.64, 1);
+  --t-fast: 140ms;
+  --t-base: 220ms;
+  --t-slow: 340ms;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #eef2f9;
+  --surface-1: rgb(255 255 255 / 72%);
+  --surface-2: rgb(255 255 255 / 92%);
+  --surface-solid: #ffffff;
+  --surface-edge: rgb(15 23 42 / 12%);
+  --surface-edge-soft: rgb(15 23 42 / 7%);
+  --scrim: rgb(15 23 42 / 38%);
+
+  /* روی سطح روشن، شیب باید بسیار ملایم‌تر باشد وگرنه کارت می‌سوزد */
+  --sheen: linear-gradient(
+    170deg,
+    rgb(255 255 255 / 50%) 0%,
+    rgb(255 255 255 / 14%) 40%,
+    rgb(255 255 255 / 0%) 70%,
+    rgb(15 23 42 / 3%) 100%
+  );
+
+  --text: #0f172a;
+  --text-muted: #47546b;
+  /* روی سطح روشن، خاکستری روشن‌تر از این کنتراست ۴٫۵ را رد نمی‌کند */
+  --text-faint: #55627c;
+
+  --up: #047857;
+  --down: #be123c;
+  --warn: #b45309;
+  --holiday: #be123c;
+
+  /* روی کارت سفید، ابرِ سفید ناپیدا می‌شود؛ کل پالت یک پله تیره‌تر می‌رود */
+  --wx-cloud-1: #dbe5f5;
+  --wx-cloud-2: #93a5c4;
+  --wx-storm-1: #7c889f;
+  --wx-storm-2: #4a5468;
+  --wx-moon-1: #c3d0ec;
+  --wx-moon-2: #7f92ba;
+  --wx-rain: #38bdf8;
+  --wx-snow: #b7d8f0;
+
+  --shadow-card:
+    0 1px 0 0 rgb(255 255 255 / 85%) inset,
+    0 2px 6px -4px rgb(15 23 42 / 18%),
+    0 18px 40px -26px rgb(15 23 42 / 45%);
+  --shadow-float:
+    0 1px 0 0 rgb(255 255 255 / 90%) inset,
+    0 4px 12px -6px rgb(15 23 42 / 18%),
+    0 32px 70px -30px rgb(15 23 42 / 50%);
+  --shadow-lift:
+    0 1px 0 0 rgb(255 255 255 / 95%) inset,
+    0 4px 10px -6px rgb(15 23 42 / 18%),
+    0 26px 54px -24px rgb(15 23 42 / 45%);
+  --accent-halo: 0 10px 30px -12px color-mix(in oklab, var(--accent) 50%, transparent);
+}
+
+/* شفافیت کمتر: سطح‌ها مات می‌شوند و بلور کنار می‌رود */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --surface-1: #141b28;
+    --surface-2: #1b2432;
+    --blur-card: 0px;
+    --blur-chrome: 0px;
+    --sheen: none;
+  }
+
+  :root[data-theme='light'] {
+    --surface-1: #ffffff;
+    --surface-2: #f6f8fc;
+  }
+}
+
+/* کنتراست بیشتر: لبه‌های مشخص و متن پررنگ‌تر */
+@media (prefers-contrast: more) {
+  :root {
+    --surface-1: #0e141f;
+    --surface-2: #161f2c;
+    --surface-edge: rgb(255 255 255 / 38%);
+    --text-muted: #dbe3f2;
+    --text-faint: #c2cce0;
+    --sheen: none;
+  }
+
+  :root[data-theme='light'] {
+    --surface-1: #ffffff;
+    --surface-edge: rgb(15 23 42 / 45%);
+    --text-muted: #1f2937;
+    --text-faint: #334155;
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "manifest_version": 3,
+  "name": "یار — دستیار تب جدید",
+  "short_name": "یار",
+  "version": "1.7.0",
+  "default_locale": "fa",
+  "description": "تب جدید فارسی: تقویم شمسی، آب‌وهوا، نرخ ارز، طلا و نقره، هشدار قیمت، سبد دارایی، مبدل، اخبار، کارها، یادداشت و تایمر تمرکز.",
+  "icons": {
+    "16": "src/assets/icons/icon-16.png",
+    "32": "src/assets/icons/icon-32.png",
+    "48": "src/assets/icons/icon-48.png",
+    "128": "src/assets/icons/icon-128.png"
+  },
+  "chrome_url_overrides": {
+    "newtab": "src/newtab/index.html"
+  },
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_title": "یار",
+    "default_icon": {
+      "16": "src/assets/icons/icon-16.png",
+      "32": "src/assets/icons/icon-32.png"
+    }
+  },
+  "background": {
+    "service_worker": "src/background/service-worker.js",
+    "type": "module"
+  },
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "topSites",
+    "bookmarks",
+    "favicon",
+    "alarms",
+    "geolocation",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "https://call.tgju.org/*",
+    "https://api.open-meteo.com/*",
+    "https://geocoding-api.open-meteo.com/*",
+    "https://suggestqueries.google.com/*",
+    "https://www.zoomit.ir/*",
+    "https://digiato.com/*",
+    "https://www.irna.ir/*",
+    "https://www.isna.ir/*",
+    "https://www.varzesh3.com/*"
+  ],
+  "optional_permissions": [
+    "notifications"
+  ],
+  "optional_host_permissions": [
+    "https://*/*"
+  ],
+  "minimum_chrome_version": "111",
+  "omnibox": {
+    "keyword": "yar"
+  }
+}

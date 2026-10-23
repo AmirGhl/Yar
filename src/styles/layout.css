@@ -1,0 +1,404 @@
+/**
+ * چیدمان تب جدید — یک نمای کامل، بدون اسکرول صفحه.
+ *
+ * چهار ناحیه: ریل باریک بالا، ستون کناری، وسط، پنل زبانه‌دار، و نوار نرخ‌ها.
+ * هر ناحیه‌ای که محتوایش از سهمش بیشتر شود، خودش داخل خودش اسکرول می‌خورد.
+ */
+
+/* ---------- پس‌زمینه ---------- */
+/*
+ * چهار لایه روی هم: شیب انتخابی کاربر، دو هالهٔ رنگی شناور، یک تیرگی
+ * گوشه‌ها (وینیت) و یک لایهٔ دانه‌دانه. لایهٔ آخر مهم‌ترین است: شیب‌های
+ * بزرگ روی نمایشگر باندبندی می‌شوند و دانه آن نوارها را می‌شکند.
+ */
+.wallpaper {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  background: var(--wallpaper, linear-gradient(160deg, #05070f, #0b1020));
+  background-size: cover;
+  background-position: center;
+}
+
+/* سه هالهٔ بزرگ که خیلی آرام جابه‌جا می‌شوند و به پس‌زمینه عمق می‌دهند */
+.wallpaper::before,
+.wallpaper::after,
+.page::before {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.wallpaper::before {
+  width: 48vmax;
+  height: 48vmax;
+  inset-block-start: -16vmax;
+  inset-inline-end: -10vmax;
+  background: var(--accent);
+  opacity: 0.3;
+  animation: drift-a 52s ease-in-out infinite alternate;
+}
+
+.wallpaper::after {
+  width: 44vmax;
+  height: 44vmax;
+  inset-block-end: -18vmax;
+  inset-inline-start: -12vmax;
+  background: var(--accent-2);
+  opacity: 0.28;
+  animation: drift-b 66s ease-in-out infinite alternate;
+}
+
+/*
+ * هالهٔ سوم عمداً روی قاب صفحه سوار است، نه روی کاغذدیواری: باید *جلوی*
+ * حجاب بنشیند تا کم‌رنگ‌کنندهٔ کاربر آن را هم خفه نکند، و رنگش با دو
+ * هالهٔ دیگر روی هم بیفتد و میانه‌شان رنگ سومی بسازد.
+ */
+.page::before {
+  /*
+   * fixed است نه absolute: یک دایرهٔ بزرگ و محو از لبهٔ قاب بیرون می‌زند و
+   * اگر مطلق باشد به ارتفاع قابل‌اسکرول سند اضافه می‌شود. عنصر ثابت هیچ
+   * سرریزی نمی‌سازد و همچنان داخل همین لایهٔ چینش می‌ماند.
+   */
+  position: fixed;
+  /* منفی لازم است: بدون آن، عنصر مطلقِ ::before روی کارت‌ها می‌افتد */
+  z-index: -1;
+  width: 34vmax;
+  height: 34vmax;
+  inset-block-start: 34%;
+  inset-inline-start: 26%;
+  background: color-mix(in oklab, var(--accent) 30%, #f472b6 70%);
+  opacity: 0.14;
+  filter: blur(110px);
+  animation: drift-c 78s ease-in-out infinite alternate;
+}
+
+@keyframes drift-a {
+  to {
+    transform: translate3d(-6vmax, 7vmax, 0) scale(1.12);
+  }
+}
+
+@keyframes drift-b {
+  to {
+    transform: translate3d(7vmax, -6vmax, 0) scale(0.92);
+  }
+}
+
+@keyframes drift-c {
+  to {
+    transform: translate3d(-9vmax, -5vmax, 0) scale(1.2);
+  }
+}
+
+:root[data-motion='reduced'] .wallpaper::before,
+:root[data-motion='reduced'] .wallpaper::after,
+:root[data-motion='reduced'] .page::before {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wallpaper::before,
+  .wallpaper::after,
+  .page::before {
+    animation: none;
+  }
+}
+
+/* در تم روشن هاله‌ها باید محو باشند وگرنه صفحه گل‌آلود می‌شود */
+:root[data-theme='light'] .wallpaper::before {
+  opacity: 0.16;
+}
+
+:root[data-theme='light'] .wallpaper::after {
+  opacity: 0.14;
+}
+
+:root[data-theme='light'] .page::before {
+  opacity: 0.08;
+}
+
+.wallpaper__veil {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  /* شیب بالا/پایین برای خوانایی ریل و نوار نرخ‌ها + وینیت برای جمع کردن نگاه به وسط */
+  background:
+    radial-gradient(120% 90% at 50% 45%, transparent 42%, rgb(2 4 10 / 55%) 100%),
+    linear-gradient(180deg, rgb(4 6 12 / 55%) 0%, rgb(4 6 12 / 12%) 40%, rgb(4 6 12 / 62%) 100%);
+  opacity: var(--wallpaper-dim, 0.28);
+  pointer-events: none;
+}
+
+:root[data-theme='light'] .wallpaper__veil {
+  background:
+    radial-gradient(120% 90% at 50% 45%, transparent 45%, rgb(15 23 42 / 22%) 100%),
+    linear-gradient(180deg, rgb(255 255 255 / 60%) 0%, rgb(255 255 255 / 25%) 40%, rgb(255 255 255 / 70%) 100%);
+}
+
+/*
+ * دانهٔ ریز روی همه‌چیز. مقدارش عمداً کم است — نباید دیده شود، فقط باید
+ * نگذارد شیب‌ها صاف و پلاستیکی به نظر برسند.
+ */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+:root[data-theme='light'] body::after {
+  opacity: 0.02;
+}
+
+/* ---------- قاب صفحه ---------- */
+/* از ارتفاع واقعی body استفاده می‌کنیم، نه 100dvh — در بعضی حالت‌ها
+   dvh یکی دو پیکسل بزرگ‌تر از فضای قابل دیدن می‌شود و اسکرول می‌سازد */
+.page {
+  position: relative;
+  /* بالای لایهٔ دانه بنشیند وگرنه متن‌ها زبر می‌شوند */
+  z-index: 1;
+  height: 100%;
+  display: grid;
+  /* ستون صریح لازم است: بدون آن گرید یک ستون ضمنی با اندازهٔ auto می‌سازد
+     که کف آن min-content است و کل صفحه را به پهنای محتوا باز می‌کند */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+}
+
+/* ---------- ریل بالا ---------- */
+/* عمداً کم‌جان است: نام افزونه و دو دکمه. هرچه اینجا باشد هر روز دیده می‌شود. */
+.rail {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding-inline: var(--s-2);
+  min-height: 2rem;
+}
+
+/*
+ * نشان و نام افزونه.
+ *
+ * نشان همان حلقهٔ شکسته و نقطهٔ آیکون نوار ابزار است (tools/make-icons.py)،
+ * با همان شیب فیروزه‌ای→نیلی. عمداً از --accent پیروی *نمی‌کند*: رنگ
+ * تأکیدی یک تنظیم است و هویت با تنظیم عوض نمی‌شود. اگر اینجا رنگ کاربر
+ * می‌نشست، نشانِ داخل صفحه با آیکونی که کاربر روی نوار ابزار می‌بیند فرق می‌کرد.
+ */
+.rail__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  opacity: 0.85;
+  transition: opacity var(--t-base) var(--ease-out);
+}
+
+.rail:hover .rail__brand {
+  opacity: 1;
+}
+
+.rail__mark {
+  width: 1.35rem;
+  height: 1.35rem;
+  flex: none;
+  border-radius: 32%;
+  box-shadow: 0 3px 10px -4px rgb(34 211 238 / 55%);
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+.rail:hover .rail__mark {
+  transform: rotate(-12deg) scale(1.06);
+}
+
+.rail__word {
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: var(--track-title);
+  color: var(--text);
+}
+
+.rail__spacer {
+  flex: 1;
+}
+
+/* ابزارها تا وقتی لازم نشده‌اند کم‌رنگ می‌مانند */
+.rail__tools {
+  display: flex;
+  align-items: center;
+  gap: var(--s-1);
+  opacity: 0.55;
+  transition: opacity var(--t-base) var(--ease-out);
+}
+
+.rail:hover .rail__tools,
+.rail__tools:focus-within {
+  opacity: 1;
+}
+
+/* ---------- صحنه ---------- */
+.stage {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(15rem, 20rem) minmax(0, 1fr) minmax(17rem, 23rem);
+  gap: var(--s-3);
+}
+
+.side {
+  /* آیتم گرید به‌طور پیش‌فرض کوچک‌تر از min-content نمی‌شود و ستون را پهن می‌کند */
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  mask-image: linear-gradient(180deg, transparent 0, #000 10px, #000 calc(100% - 10px), transparent 100%);
+}
+
+.side:not(.is-scrollable) {
+  mask-image: none;
+}
+
+.side > .card:not(.card--grow) {
+  flex: none;
+}
+
+.side {
+  justify-content: flex-start;
+}
+
+/* وسط: جست‌وجو و میان‌برها، عمودی وسط‌چین — قلب صفحه */
+.hero {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--s-5);
+  padding-block-end: 4vh;
+}
+
+/*
+ * نورافکن پشت بخش وسط. کارش پر کردن فضای خالی نیست — کارش این است که
+ * چشم بداند صفحه از کجا شروع می‌شود. بدون آن، نوار جست‌وجو در یک خلأ شناور است.
+ *
+ * عمداً پس‌زمینهٔ خود .hero است، نه یک ::before مطلق و بزرگ‌تر از قاب:
+ * چنان عنصری در پهنای کم از لبهٔ صفحه بیرون می‌زند و اسکرول افقی می‌سازد.
+ * پس‌زمینه هرگز سرریز نمی‌سازد و شیب شعاعی خودش به‌اندازهٔ کافی محو است.
+ */
+.hero {
+  background: radial-gradient(
+      58% 40% at 50% 46%,
+      color-mix(in oklab, var(--accent) 15%, transparent) 0%,
+      transparent 70%
+    )
+    no-repeat;
+}
+
+.panel {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+.panel > * {
+  flex: 1;
+  min-height: 0;
+  /* بدون این، محتوای پهن یک زبانه کل پنل را از ستونش بیرون می‌زند */
+  min-width: 0;
+}
+
+.footer {
+  display: flex;
+}
+
+/* ناحیهٔ خاموش‌شده جا اشغال نکند */
+.side.is-empty,
+.panel.is-empty,
+.footer.is-empty {
+  display: none;
+}
+
+/* ---------- واکنش‌گرایی ---------- */
+
+@media (max-width: 1180px) {
+  .stage {
+    grid-template-columns: minmax(13rem, 17rem) minmax(0, 1fr) minmax(14rem, 19rem);
+    gap: var(--s-2);
+  }
+}
+
+/*
+ * زیر این پهنا جا برای سه ستون نیست. پنل زبانه‌دار زیر بخش وسط می‌رود
+ * تا هیچ چیزی حذف نشود و صفحه هم یک نما بماند.
+ */
+@media (max-width: 1000px) {
+  .stage {
+    grid-template-columns: minmax(13rem, 17rem) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .side {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .hero {
+    grid-column: 2;
+    grid-row: 1;
+    padding-block-end: 0;
+  }
+
+  .panel {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}
+
+/* تنگ‌تر از این، وعدهٔ «یک صفحه» شکستنی است: صحنه خودش اسکرول می‌شود */
+@media (max-width: 720px), (max-height: 480px) {
+  .page {
+    height: 100%;
+    padding: var(--s-2);
+    gap: var(--s-2);
+  }
+
+  .stage {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    overflow-y: auto;
+    align-content: start;
+    gap: var(--s-3);
+  }
+
+  .side,
+  .hero,
+  .panel {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .side {
+    overflow: visible;
+    mask-image: none;
+  }
+
+  .hero {
+    order: -1;
+  }
+
+  .panel {
+    min-height: 22rem;
+  }
+}

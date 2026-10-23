@@ -1,0 +1,1334 @@
+/** ظاهر هر بخش. */
+
+/* ═══════════ کارت امروز: ساعت + تاریخ + آب‌وهوا ═══════════ */
+.today {
+  gap: var(--s-2);
+}
+
+.today__main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.today__now {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/*
+ * ساعت بزرگ‌ترین عدد صفحه است، پس وزنش باید سبک باشد: در اندازهٔ درشت،
+ * وزن سنگین سنگین‌تر هم دیده می‌شود و کارت را به هم می‌ریزد.
+ */
+.today__clock {
+  display: flex;
+  align-items: baseline;
+  gap: 0.15em;
+  font-size: 3rem;
+  font-weight: 250;
+  line-height: 1;
+  letter-spacing: var(--track-display);
+  color: var(--text);
+  text-shadow: 0 2px 20px color-mix(in oklab, var(--accent) 18%, transparent);
+}
+
+/* هالهٔ نور فقط روی زمینهٔ تیره معنا دارد؛ روی سفید متن را گل‌آلود می‌کند */
+:root[data-theme='light'] .today__clock {
+  text-shadow: none;
+}
+
+.today__seconds {
+  font-size: 0.36em;
+  color: var(--text-faint);
+  font-weight: 400;
+}
+
+.today__seconds:empty {
+  display: none;
+}
+
+.today__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35em;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+}
+
+.today__weekday {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.today__weekday.is-holiday {
+  color: var(--holiday);
+}
+
+/* آب‌وهوا در همان کارت، سمت مقابل ساعت — یک نگاه، دو خبر */
+.today__weather {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-1) var(--s-2);
+  margin: calc(var(--s-1) * -1) calc(var(--s-2) * -1);
+  border-radius: var(--r-md);
+  text-align: start;
+  transition: background var(--t-fast) linear;
+}
+
+.today__weather:hover {
+  background: var(--surface-2);
+}
+
+/* صحنهٔ آب‌وهوا داخل یک قرص رنگی — تنها لکهٔ رنگ کارت امروز */
+.today__glyph {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  flex: none;
+  border-radius: var(--r-md);
+  color: var(--accent-strong);
+  background: linear-gradient(
+    150deg,
+    color-mix(in oklab, var(--accent) 26%, transparent),
+    color-mix(in oklab, var(--accent-2) 14%, transparent)
+  );
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent) 22%, transparent) inset;
+}
+
+.today__weather-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.35;
+}
+
+.today__temp {
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: var(--track-title);
+}
+
+.today__condition {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.today__range {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+
+.today__greeting {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+}
+
+.today__greeting:empty {
+  display: none;
+}
+
+/* مناسبت روز — نوار نازک، نه نشان پررنگ */
+.today__occasion {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  padding-inline-start: var(--s-2);
+  border-inline-start: 2px solid color-mix(in oklab, var(--accent) 45%, transparent);
+  border-radius: 1px;
+  line-height: 1.6;
+}
+
+.today__occasion.is-holiday {
+  color: var(--holiday);
+  border-inline-start-color: currentColor;
+}
+
+.today__city {
+  align-self: flex-start;
+  font-size: 0.74rem;
+  color: var(--text-faint);
+  transition: color var(--t-fast) linear;
+}
+
+.today__city:hover {
+  color: var(--accent);
+}
+
+/* ═══════════ جست‌وجو ═══════════ */
+.search {
+  position: relative;
+  width: min(38rem, 100%);
+  min-width: 0;
+}
+
+/*
+ * نوار جست‌وجو مرکز ثقل صفحه است و تنها چیزی است که اجازه دارد از بقیهٔ
+ * سطح‌ها روشن‌تر و برجسته‌تر باشد.
+ */
+.search__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 0.35rem 0.35rem 0.35rem var(--s-4);
+  border-radius: var(--r-full);
+  background: var(--sheen), var(--surface-2);
+  border: 1px solid var(--surface-edge);
+  box-shadow: var(--shadow-float);
+  backdrop-filter: blur(var(--blur-chrome)) saturate(170%);
+  -webkit-backdrop-filter: blur(var(--blur-chrome)) saturate(170%);
+  transition:
+    border-color var(--t-base) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out),
+    transform var(--t-base) var(--ease-out);
+}
+
+.search:hover .search__bar {
+  border-color: color-mix(in oklab, var(--accent) 28%, var(--surface-edge));
+}
+
+.search:focus-within .search__bar {
+  border-color: color-mix(in oklab, var(--accent) 60%, transparent);
+  box-shadow: var(--shadow-float), 0 0 0 4px var(--accent-quiet), var(--accent-halo);
+  transform: translateY(-1px);
+}
+
+.search__input {
+  flex: 1;
+  min-width: 0;
+  min-height: 3rem;
+  padding: 0 var(--s-1);
+  background: none;
+  border: 0;
+  font-size: 1.02rem;
+}
+
+.search__input:focus {
+  outline: none;
+}
+
+.search__engine {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  height: 2.1rem;
+  padding: 0 0.75rem;
+  border-radius: var(--r-full);
+  color: var(--text-faint);
+  font-size: 0.78rem;
+  white-space: nowrap;
+  transition: background var(--t-fast) linear, color var(--t-fast) linear;
+}
+
+.search__engine:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.search__submit {
+  flex: none;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--r-full);
+  background: var(--accent-grad);
+  color: var(--text-on-accent);
+  box-shadow: var(--accent-halo);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    transform var(--t-base) var(--ease-spring),
+    filter var(--t-fast) linear,
+    box-shadow var(--t-fast) linear;
+}
+
+.search__submit:hover {
+  filter: brightness(1.1);
+  transform: scale(1.06);
+  box-shadow: var(--accent-halo), 0 0 0 4px var(--accent-quiet);
+}
+
+.search__submit:active {
+  transform: scale(0.94);
+}
+
+.search__panel {
+  position: absolute;
+  inset-inline: 0;
+  top: calc(100% + 0.5rem);
+  z-index: 20;
+  padding: var(--s-2);
+  border-radius: var(--r-lg);
+  background: var(--sheen), color-mix(in oklab, var(--surface-solid) 92%, transparent);
+  border: 1px solid var(--surface-edge);
+  box-shadow: var(--shadow-float);
+  backdrop-filter: blur(var(--blur-chrome));
+  -webkit-backdrop-filter: blur(var(--blur-chrome));
+  text-align: start;
+  /* از منبع خودش باز می‌شود: از بالای نوار جست‌وجو */
+  transform-origin: top center;
+  animation: pop-in var(--t-base) var(--ease-out);
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.985);
+  }
+}
+
+.search__option {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: 100%;
+  padding: 0.5rem var(--s-3);
+  border-radius: var(--r-md);
+  color: var(--text-muted);
+  text-align: start;
+  font-size: 0.88rem;
+}
+
+.search__option:hover,
+.search__option[aria-selected='true'] {
+  /* صفحه راست‌چین است: ۲۷۰ درجه یعنی رنگ از لبهٔ راست شروع شود */
+  background: linear-gradient(
+    270deg,
+    color-mix(in oklab, var(--accent) 16%, transparent),
+    var(--surface-2)
+  );
+  color: var(--text);
+}
+
+.search__option .icon {
+  color: var(--text-faint);
+  transition: color var(--t-fast) linear;
+}
+
+.search__option:hover .icon,
+.search__option[aria-selected='true'] .icon {
+  color: var(--accent-strong);
+}
+
+.search__engines {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  padding: var(--s-2);
+}
+
+/* ═══════════ میان‌برها ═══════════ */
+.shortcuts__wrap {
+  width: min(38rem, 100%);
+  min-width: 0;
+}
+
+.shortcuts {
+  display: grid;
+  /* minmax(0,1fr) لازم است: برچسب‌های nowrap وگرنه min-content ستون را
+     به اندازهٔ بلندترین نام باز می‌کنند و کل صفحه را پهن می‌کنند */
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--s-2);
+}
+
+.shortcut {
+  position: relative;
+  min-width: 0;
+  border-radius: var(--r-lg);
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+.shortcut__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  gap: var(--s-1);
+  padding: var(--s-2) 0.3rem;
+  border-radius: inherit;
+}
+
+.shortcut:hover {
+  transform: translateY(-4px);
+}
+
+.shortcut:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.shortcut__icon {
+  width: 2.85rem;
+  height: 2.85rem;
+  border-radius: var(--r-lg);
+  display: grid;
+  place-items: center;
+  background: var(--sheen), var(--surface-1);
+  border: 1px solid var(--surface-edge-soft);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(var(--blur-card));
+  -webkit-backdrop-filter: blur(var(--blur-card));
+  overflow: hidden;
+  transition:
+    background var(--t-fast) linear,
+    border-color var(--t-fast) linear,
+    box-shadow var(--t-base) var(--ease-out);
+}
+
+.shortcut:hover .shortcut__icon {
+  background: var(--sheen), var(--surface-2);
+  border-color: color-mix(in oklab, var(--accent) 32%, transparent);
+  box-shadow: var(--shadow-lift), var(--accent-halo);
+}
+
+.shortcut:hover .shortcut__label {
+  color: var(--text);
+}
+
+.shortcut__icon img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/*
+ * کاشی رنگی جایگزین favicon. فام از site-mark.js می‌آید و روی --tint
+ * می‌نشیند؛ رنگ دوم کمی چرخیده تا کاشی شیب داشته باشد نه رنگِ تخت.
+ */
+.shortcut__initial {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: #fff;
+  background: linear-gradient(
+    150deg,
+    hsl(var(--tint, 210) 62% 56%),
+    hsl(calc(var(--tint, 210) + 32) 58% 42%)
+  );
+  text-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+}
+
+.shortcut__label {
+  max-width: 100%;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  transition: color var(--t-fast) linear;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* خانهٔ خالی خودش دکمهٔ افزودن است */
+.shortcut--empty {
+  display: grid;
+  place-items: center;
+  /* ارتفاعش با کاشی‌های پر یکی می‌ماند تا شبکه بالا و پایین نپرد */
+  padding: var(--s-2) 0.3rem calc(var(--s-2) + 1.05rem);
+  color: var(--text-faint);
+  opacity: 0.4;
+  transition: opacity var(--t-fast) linear;
+}
+
+.shortcut--empty:hover {
+  opacity: 1;
+}
+
+.shortcut--empty .shortcut__icon {
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--surface-edge);
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.shortcut--empty:hover .shortcut__icon {
+  background: transparent;
+  border-color: color-mix(in oklab, var(--accent) 45%, transparent);
+  box-shadow: none;
+  color: var(--accent-strong);
+}
+
+.shortcut__remove {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 0.1rem;
+  inset-inline-start: 0.1rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: var(--r-full);
+  background: var(--surface-solid);
+  border: 1px solid var(--surface-edge);
+  color: var(--text-faint);
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transition: opacity var(--t-fast) linear;
+}
+
+/* دکمه کوچک می‌ماند (کار مخرب نباید راحت زده شود) اما هدف انگشت بزرگ است */
+.shortcut__remove::after {
+  content: '';
+  position: absolute;
+  inset: -0.55rem;
+}
+
+.shortcut:hover .shortcut__remove,
+.shortcut__remove:focus-visible {
+  opacity: 1;
+}
+
+/* ═══════════ تقویم ═══════════ */
+.calendar__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-1);
+}
+
+.calendar__month {
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: var(--track-title);
+  color: var(--text);
+}
+
+.calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+}
+
+.calendar__weekday {
+  padding-block: 0.15rem;
+  text-align: center;
+  font-size: 0.68rem;
+  color: var(--text-faint);
+}
+
+.calendar__day {
+  position: relative;
+  aspect-ratio: 1;
+  min-height: 1.5rem;
+  /* بدون سقف، خانه‌ها در ستون پهن مربع‌های بزرگی می‌شوند و تقویم صفحه را می‌بلعد */
+  max-height: 2.05rem;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-sm);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  transition: background var(--t-fast) linear, color var(--t-fast) linear;
+}
+
+.calendar__day:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.calendar__day[data-holiday='true'] {
+  color: var(--holiday);
+}
+
+.calendar__day[data-today='true'] {
+  background: var(--accent-grad);
+  color: var(--text-on-accent);
+  font-weight: 700;
+  box-shadow: var(--accent-halo);
+}
+
+.calendar__day[data-selected='true']:not([data-today='true']) {
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+  color: var(--text);
+}
+
+.calendar__day--outside {
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+/* نقطهٔ مناسبت — رنگ تنها حامل معنا نیست، متن روز هم زیر تقویم می‌آید */
+.calendar__day[data-event='true']::after {
+  content: '';
+  position: absolute;
+  inset-block-end: 0.15rem;
+  width: 3px;
+  height: 3px;
+  border-radius: var(--r-full);
+  background: currentColor;
+  opacity: 0.7;
+}
+
+.calendar__detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding-block-start: var(--s-2);
+  border-block-start: 1px solid var(--surface-edge-soft);
+  margin-block-start: var(--s-1);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.calendar__selected {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--text);
+}
+
+.calendar__holiday-tag {
+  font-size: 0.7rem;
+  color: var(--holiday);
+}
+
+.calendar__event[data-holiday='true'] {
+  color: var(--holiday);
+}
+
+/* ═══════════ نوار نرخ‌ها ═══════════ */
+/* یک ردیف باریک به‌جای یک پنل کامل: آیکون، نام ریز، عدد، جهت تغییر. */
+.ticker {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-width: 0;
+  padding: 0.3rem 0.4rem 0.3rem var(--s-3);
+  border-radius: var(--r-full);
+  background: var(--sheen), var(--surface-1);
+  border: 1px solid var(--surface-edge-soft);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(var(--blur-card)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--blur-card)) saturate(160%);
+  transition: border-color var(--t-base) var(--ease-out), box-shadow var(--t-base) var(--ease-out);
+}
+
+.ticker:hover {
+  border-color: var(--surface-edge);
+  box-shadow: var(--shadow-lift);
+}
+
+:root[data-glass='off'] .ticker {
+  background: var(--surface-solid);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.ticker__strip {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+}
+
+.ticker__strip::-webkit-scrollbar {
+  display: none;
+}
+
+.ticker__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex: none;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--r-full);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  transition: background var(--t-fast) linear;
+}
+
+.ticker__chip:hover {
+  background: var(--surface-2);
+}
+
+.ticker__chip + .ticker__chip {
+  box-shadow: 1px 0 0 0 var(--surface-edge-soft) inset;
+  padding-inline-start: 0.8rem;
+}
+
+/*
+ * هر گروه بازار رنگ خودش را دارد. نوار پایین بیست عدد کنار هم است و رنگِ
+ * نماد تنها چیزی است که «طلا» را از «ارز» جدا می‌کند بدون اینکه کاربر
+ * برچسب‌ها را بخواند. رنگ اینجا تزئین نیست، دسته‌بندی است.
+ */
+.ticker__icon {
+  color: var(--text-faint);
+}
+
+.ticker__chip[data-group='gold'] .ticker__icon {
+  color: #fbbf24;
+}
+
+.ticker__chip[data-group='currency'] .ticker__icon {
+  color: #4ade80;
+}
+
+.ticker__chip[data-group='crypto'] .ticker__icon {
+  color: #fb923c;
+}
+
+.ticker__chip[data-group='global'] .ticker__icon {
+  color: #818cf8;
+}
+
+/* نقره: خاکستری مایل به آبی، جدا از کهربایی طلا */
+.ticker__chip[data-group='silver'] .ticker__icon {
+  color: #cbd5e1;
+}
+
+/* روی تم روشن این رنگ‌ها کنتراست کافی ندارند و یک پله تیره می‌شوند */
+:root[data-theme='light'] .ticker__chip[data-group='gold'] .ticker__icon {
+  color: #b45309;
+}
+
+:root[data-theme='light'] .ticker__chip[data-group='currency'] .ticker__icon {
+  color: #15803d;
+}
+
+:root[data-theme='light'] .ticker__chip[data-group='crypto'] .ticker__icon {
+  color: #c2410c;
+}
+
+:root[data-theme='light'] .ticker__chip[data-group='global'] .ticker__icon {
+  color: #4338ca;
+}
+
+:root[data-theme='light'] .ticker__chip[data-group='silver'] .ticker__icon {
+  color: #475569;
+}
+
+.ticker__label {
+  color: var(--text-faint);
+  font-size: 0.75rem;
+}
+
+.ticker__chip b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.ticker__delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.05rem;
+  padding: 0.05rem 0.3rem;
+  border-radius: var(--r-full);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.ticker__chip[data-dir='up'] .ticker__delta {
+  background: color-mix(in oklab, var(--up) 15%, transparent);
+}
+
+.ticker__chip[data-dir='down'] .ticker__delta {
+  background: color-mix(in oklab, var(--down) 15%, transparent);
+}
+
+.ticker__chip[data-dir='up'] .ticker__delta {
+  color: var(--up);
+}
+
+.ticker__chip[data-dir='down'] .ticker__delta {
+  color: var(--down);
+}
+
+.ticker__chip--empty {
+  color: var(--text-faint);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ticker__more {
+  flex: none;
+  width: 1.9rem;
+  height: 1.9rem;
+  opacity: 0.45;
+}
+
+.ticker:hover .ticker__more {
+  opacity: 1;
+}
+
+.ticker.is-stale {
+  border-style: dashed;
+}
+
+/* ═══════════ اخبار ═══════════ */
+.news__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+/*
+ * هر خبر یک ردیف است، نه یک کارت. نشانهٔ hover یک نوار رنگی روی لبهٔ راست
+ * (سمت شروع در راست‌چین) است — ارزان‌تر از سایه و جای ردیف را جابه‌جا نمی‌کند.
+ */
+.news__item {
+  position: relative;
+  display: flex;
+  gap: var(--s-3);
+  padding: var(--s-2);
+  border-radius: var(--r-md);
+  transition: background var(--t-fast) linear;
+}
+
+.news__item::before {
+  content: '';
+  position: absolute;
+  inset-block: 0.4rem;
+  inset-inline-start: 0;
+  width: 2px;
+  border-radius: var(--r-full);
+  background: var(--accent-grad);
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform var(--t-base) var(--ease-out);
+}
+
+.news__item:hover {
+  background: var(--surface-2);
+}
+
+.news__item:hover::before,
+.news__item:focus-within::before {
+  transform: scaleY(1);
+}
+
+
+.news__thumb {
+  flex: none;
+  width: 3.1rem;
+  height: 3.1rem;
+  border-radius: var(--r-md);
+  object-fit: cover;
+  background: var(--surface-2);
+  box-shadow: 0 0 0 1px var(--surface-edge-soft) inset;
+}
+
+.news__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.news__title {
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.65;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.news__meta {
+  display: flex;
+  gap: var(--s-2);
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+
+/* ═══════════ کارها ═══════════ */
+.todo__form {
+  display: flex;
+  gap: var(--s-2);
+}
+
+.todo__list {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  overflow-y: auto;
+}
+
+.todo__item {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 0.3rem var(--s-2);
+  border-radius: var(--r-md);
+  transition: background var(--t-fast) linear;
+}
+
+.todo__item:hover {
+  background: var(--surface-2);
+}
+
+.todo__check {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: var(--r-full);
+  border: 1.5px solid var(--surface-edge);
+  display: grid;
+  place-items: center;
+  color: transparent;
+  transition: all var(--t-fast) var(--ease-out);
+}
+
+.todo__check:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-quiet);
+}
+
+.todo__item[data-done='true'] .todo__check {
+  background: var(--accent-grad);
+  border-color: transparent;
+  color: var(--text-on-accent);
+  box-shadow: var(--accent-halo);
+}
+
+.todo__text {
+  flex: 1;
+  font-size: 0.86rem;
+  text-align: start;
+  word-break: break-word;
+}
+
+.todo__item[data-done='true'] .todo__text {
+  color: var(--text-faint);
+  text-decoration: line-through;
+}
+
+/* دکمهٔ حذف تا وقتی لازم نشده دیده نمی‌شود */
+.todo__item .icon-btn {
+  opacity: 0;
+}
+
+.todo__item:hover .icon-btn,
+.todo__item .icon-btn:focus-visible {
+  opacity: 1;
+}
+
+.todo__progress {
+  font-size: 0.74rem;
+  color: var(--text-faint);
+}
+
+.todo__progress:empty {
+  display: none;
+}
+
+/* ═══════════ یادداشت ═══════════ */
+.notes__area {
+  flex: 1;
+  min-height: 6rem;
+  resize: none;
+  background: color-mix(in oklab, var(--surface-2) 45%, transparent);
+}
+
+.notes__status {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  min-height: 1rem;
+}
+
+/* ═══════════ تایمر ═══════════ */
+/* پنل بلند است، پس صفحهٔ تایمر عمودی و بزرگ است — مثل ساعت آشپزخانه، از دور خوانا */
+.timer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-4);
+}
+
+.timer__dial {
+  position: relative;
+  width: clamp(7rem, 22vh, 10.5rem);
+  aspect-ratio: 1;
+  flex: none;
+}
+
+.timer__dial svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.timer__track {
+  stroke: color-mix(in oklab, var(--text-faint) 22%, transparent);
+}
+
+.timer__bar {
+  stroke: var(--accent);
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px color-mix(in oklab, var(--accent) 55%, transparent));
+  transition: stroke-dashoffset var(--t-base) linear, stroke var(--t-slow) var(--ease-out);
+}
+
+/* استراحت رنگ آرام‌تری دارد تا با یک نگاه معلوم باشد کدام نوبت است */
+.timer__dial[data-mode='break'] .timer__bar {
+  stroke: var(--up);
+  filter: drop-shadow(0 0 6px color-mix(in oklab, var(--up) 55%, transparent));
+}
+
+.timer__center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.1rem;
+}
+
+.timer__value {
+  font-size: clamp(1.4rem, 4.4vh, 2.1rem);
+  font-weight: 300;
+  letter-spacing: var(--track-display);
+  line-height: 1;
+}
+
+.timer__mode {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+
+.timer__dial[data-running='true'] .timer__mode {
+  color: var(--accent);
+}
+
+.timer__controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.timer__modes,
+.timer__buttons {
+  display: flex;
+  gap: var(--s-2);
+}
+
+.timer__stats {
+  font-size: 0.74rem;
+  color: var(--text-faint);
+  text-align: center;
+}
+
+/* ═══════════ نشان‌ها ═══════════ */
+.bookmarks__crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1);
+  font-size: 0.75rem;
+  color: var(--text-faint);
+}
+
+.bookmarks__crumb:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+.bookmarks__list {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  overflow-y: auto;
+}
+
+.bookmarks__row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 0.35rem var(--s-2);
+  border-radius: var(--r-md);
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  text-align: start;
+  width: 100%;
+  transition: background var(--t-fast) linear;
+}
+
+.bookmarks__row:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.bookmarks__row:hover img {
+  transform: scale(1.12);
+}
+
+.bookmarks__row img {
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+.bookmarks__row img {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+}
+
+.bookmarks__row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ═══════════ بودجهٔ عمودی ═══════════ */
+/*
+ * صفحه یک نمای کامل است، پس ارتفاع یک منبع محدود است و باید تقسیم شود.
+ * ترتیب کوتاه شدن عمدی است: اول فاصله‌ها، بعد تزئینات، و آخر از همه اطلاعات.
+ */
+
+[data-widget='calendar'] {
+  min-height: clamp(12rem, 30vh, 19rem);
+}
+
+@media (max-height: 820px) {
+  .today__clock {
+    font-size: 2.5rem;
+  }
+
+  .today__glyph {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
+  .today__glyph .wx {
+    width: 32px;
+    height: 32px;
+  }
+
+  .hero {
+    gap: var(--s-4);
+    padding-block-end: 2vh;
+  }
+
+  .card,
+  .tabs {
+    padding: var(--s-3);
+  }
+}
+
+@media (max-height: 720px) {
+  /* شبکهٔ میان‌برها سقف می‌گیرد تا بخش وسط از قابش بیرون نزند */
+  .shortcuts {
+    max-height: 11rem;
+    overflow-y: auto;
+    padding-block: 2px;
+  }
+
+  .shortcut__icon {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+}
+
+@media (max-height: 680px) {
+  .today__greeting {
+    display: none;
+  }
+
+  .today__clock {
+    font-size: 2rem;
+  }
+
+  .search__input,
+  .search__submit {
+    min-height: 2.7rem;
+    height: 2.7rem;
+  }
+
+  .search__submit {
+    width: 2.7rem;
+  }
+
+  .shortcuts {
+    gap: var(--s-1);
+  }
+
+  .shortcut__label {
+    font-size: 0.66rem;
+  }
+}
+
+/* در پهنای کم شبکهٔ ۶ ستونی خیلی فشرده می‌شود */
+@media (max-width: 1180px) {
+  .shortcuts {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .shortcuts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ═══════════ صحنه‌های آب‌وهوا ═══════════ */
+/*
+ * شکل در weather-art.js ساخته می‌شود و رنگ و حرکت اینجاست. حرکت‌ها همه
+ * کُند و بی‌صداند: این تصویر تمام روز جلوی چشم است و هر چیزِ تندی در آن
+ * بعد از بار دهم آزاردهنده می‌شود.
+ */
+.wx {
+  display: block;
+  overflow: visible;
+}
+
+/* رنگ توقف‌های گرادیان — تنها راه رساندن توکن CSS به داخل <linearGradient> */
+.wx-stop-sun-1 { stop-color: var(--wx-sun-1); }
+.wx-stop-sun-2 { stop-color: var(--wx-sun-2); }
+.wx-stop-moon-1 { stop-color: var(--wx-moon-1); }
+.wx-stop-moon-2 { stop-color: var(--wx-moon-2); }
+.wx-stop-cloud-1 { stop-color: var(--wx-cloud-1); }
+.wx-stop-cloud-2 { stop-color: var(--wx-cloud-2); }
+.wx-stop-storm-1 { stop-color: var(--wx-storm-1); }
+.wx-stop-storm-2 { stop-color: var(--wx-storm-2); }
+
+.wx__sun {
+  filter: drop-shadow(0 0 6px color-mix(in oklab, var(--wx-sun-2) 60%, transparent));
+}
+
+.wx__rays {
+  stroke: var(--wx-sun-1);
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0.85;
+  animation: wx-spin 34s linear infinite;
+}
+
+.wx__moon {
+  filter: drop-shadow(0 0 5px color-mix(in oklab, var(--wx-moon-1) 45%, transparent));
+}
+
+.wx__star {
+  fill: var(--wx-moon-1);
+  animation: wx-twinkle 3.6s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 1.1s);
+}
+
+.wx__cloud {
+  filter: drop-shadow(0 2px 4px rgb(0 0 0 / 22%));
+}
+
+/* ابر روی خودش شناور است — جابه‌جایی کمتر از یک پیکسل، فقط برای زنده بودن */
+.wx__cloud,
+.wx__cloud--dark {
+  animation: wx-float 7s ease-in-out infinite alternate;
+}
+
+.wx__drop {
+  stroke: var(--wx-rain);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  animation: wx-drop 1.15s linear infinite;
+  animation-delay: calc(var(--i, 0) * 0.24s);
+}
+
+.wx__flake {
+  fill: var(--wx-snow);
+  animation: wx-flake 2.6s linear infinite;
+  animation-delay: calc(var(--i, 0) * 0.7s);
+}
+
+.wx__haze {
+  stroke: var(--wx-cloud-2);
+  stroke-width: 3.4;
+  stroke-linecap: round;
+  opacity: 0.75;
+  animation: wx-haze 4.5s ease-in-out infinite alternate;
+  animation-delay: calc(var(--i, 0) * 0.9s);
+}
+
+.wx__bolt {
+  fill: var(--wx-bolt);
+  filter: drop-shadow(0 0 5px color-mix(in oklab, var(--wx-bolt) 70%, transparent));
+  animation: wx-flash 3.4s ease-in-out infinite;
+}
+
+@keyframes wx-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes wx-twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes wx-float {
+  to {
+    transform: translateX(1.5px);
+  }
+}
+
+@keyframes wx-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(11px);
+  }
+}
+
+@keyframes wx-flake {
+  0% {
+    opacity: 0;
+    transform: translate(0, -3px);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-3px, 12px);
+  }
+}
+
+@keyframes wx-haze {
+  to {
+    transform: translateX(4px);
+  }
+}
+
+/* رعد: بیشتر وقت خاموش است و کوتاه می‌زند — همان ریتم واقعی‌اش */
+@keyframes wx-flash {
+  0%,
+  62%,
+  70%,
+  100% {
+    opacity: 0.28;
+  }
+  65%,
+  67% {
+    opacity: 1;
+  }
+}
+
+/* «حرکت کمتر» افزونه: صحنه می‌ماند، جنبشش می‌رود */
+:root[data-motion='reduced'] .wx * {
+  animation: none !important;
+}

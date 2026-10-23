@@ -1,0 +1,131 @@
+/** پاپ‌آپ نوار ابزار — نسخهٔ فشردهٔ همان داشبورد. */
+
+.popup {
+  width: 20rem;
+  background: var(--bg);
+  background-image: var(--wallpaper);
+  background-size: cover;
+}
+
+.popup #root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding: var(--s-3);
+  background: color-mix(in oklab, var(--bg) 62%, transparent);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.popup__loading {
+  height: 9rem;
+}
+
+.popup__hero {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: var(--s-3);
+  border-radius: var(--r-lg);
+  background: var(--sheen), var(--surface-1);
+  border: 1px solid var(--surface-edge-soft);
+}
+
+.popup__time {
+  font-size: 2.1rem;
+  font-weight: 250;
+  line-height: 1.1;
+  letter-spacing: var(--track-display);
+}
+
+.popup__date {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.popup__sub {
+  color: var(--text-faint);
+  font-size: 0.76rem;
+}
+
+.popup__strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-2);
+}
+
+.popup__tile {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-md);
+  background: var(--sheen), var(--surface-1);
+  border: 1px solid var(--surface-edge-soft);
+  font-size: 0.82rem;
+}
+
+.popup__tile b {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.popup__tile small {
+  color: var(--text-faint);
+  font-size: 0.72rem;
+}
+
+.popup__tile .icon {
+  color: var(--accent);
+}
+
+.popup__section {
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-md);
+  background: var(--sheen), var(--surface-1);
+  border: 1px solid var(--surface-edge-soft);
+}
+
+.popup__section h2 {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-faint);
+  margin-block-end: var(--s-1);
+}
+
+.popup__foot {
+  display: flex;
+  gap: var(--s-2);
+}
+
+.popup__foot .btn {
+  flex: 1;
+  min-height: 2.25rem;
+  font-size: 0.85rem;
+}
+
+/* صحنهٔ آب‌وهوا در کاشی پاپ‌آپ — هم‌اندازهٔ آیکون‌های کناری‌اش */
+.popup__wx {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+/* نوار «نسخهٔ تازه» بالای پاپ‌آپ */
+.popup__update {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-md);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-on-accent);
+  background: var(--accent-grad);
+}
+
+.popup__update[hidden] {
+  display: none;
+}
